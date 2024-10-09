@@ -3,7 +3,13 @@ dotenv.config({ path: "../.env" });
 const express = require("express");
 const app = express();
 const db = require("./db/connect");
+const cors = require("cors");
+
+// Models
 const User = require("./models/User").User;
+
+// Middleware
+app.use(cors());
 
 db.connect();
 
