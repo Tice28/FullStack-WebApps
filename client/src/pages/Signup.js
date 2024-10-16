@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,21 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/user")
+      .then((response) => {
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.status === 403) {
+          navigate("/login");
+        } else {
+          setErrors(error.response.data);
+        }
+      });
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();

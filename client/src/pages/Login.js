@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,22 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/user")
+      .then((response) => {
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.status === 403) {
+          navigate("/login");
+        } else {
+          setErrors(error.response.data);
+        }
+      });
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -16,13 +32,14 @@ const Login = () => {
         password: password,
       })
       .then((response) => {
-        sessionStorage.token = response.data;
+        console.log(response.data);
         navigate("/");
       })
       .catch((error) => {
         try {
           setErrors(error.response.data);
         } catch (err) {
+          console.log(err);
           setErrors("An error has occured.");
         }
       });
@@ -41,7 +58,7 @@ const Login = () => {
           id="email"
           onChange={(event) => setEmail(event.target.value)}
         ></input>
-        <label htmlFor="password">Email</label>
+        <label htmlFor="password">Password</label>
         <input
           type="password"
           id="password"

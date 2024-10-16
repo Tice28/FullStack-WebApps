@@ -5,37 +5,46 @@ const app = express();
 const db = require("./db/connect");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 // Models
 const User = require("./models/User").User;
-const Habit = require("./models/Habit").Habit;
 
 // Middleware
-const checkToken = require("./middleware/checkToken").checkToken;
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.DB_URI,
+    }),
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: false,
+      httpOnly: true,
+    },
+  })
+);
 
 db.connect();
 
-app.get("/api/user", checkToken, async (req, res) => {
-  console.log(req.token);
-  //verify the JWT token generated for the user
-  jwt.verify(req.token, process.env.JWT_SECRET, (err, authorizedData) => {
-    if (err) {
-      //If error send Forbidden (403)
-      console.log("ERROR: Could not connect to the protected route");
-      res
-        .status(403)
-        .send("Could not verify user, please login and try again.");
-    } else {
-      //If token is successfully verified, we can send the autorized data
-      res.json({
-        authorizedData,
-      });
-      console.log("SUCCESS: Connected to protected route");
-    }
-  });
+app.get("/api/user", async (req, res) => {
+  if (req.session.user !== undefined) {
+    const user = await User.findOne({ _id: req.session.user });
+    res.send(user.habits);
+  } else {
+    res.sendStatus(403);
+  }
 });
 
 app.post("/api/user", async (req, res) => {
@@ -58,24 +67,32 @@ app.post("/api/user", async (req, res) => {
 
 app.post("/api/login", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
+  console.log(req.session);
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
-      jwt.sign(
-        { email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" },
-        (err, token) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send("Server error, please login again.");
-          }
-          res.send(token);
+      req.session.user = user._id;
+      req.session.save((err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Send Session");
+          res.send(req.session.user);
         }
-      );
-    } else {
-      res.status(401).send("Email or Password were invalid");
+      });
     }
+  } else {
+    res.status(401).send("Email or Password were invalid");
   }
+});
+
+app.post("/api/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Session is destroyed");
+    }
+  });
 });
 
 app.listen(process.env.PORT, () => {
