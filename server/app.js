@@ -23,7 +23,7 @@ app.get("/api/user", async (req, res) => {
 
 app.post("/api/user", async (req, res) => {
   if (await User.exists({ email: req.body.email })) {
-    res.status(409).json({ message: "User already exists" });
+    res.status(409).send("User already exists.");
   } else {
     try {
       const pw = await bcrypt.hash(req.body.password, 10);
@@ -32,15 +32,25 @@ app.post("/api/user", async (req, res) => {
         password: pw,
       });
       await user.save();
-      res.status(200).json({ message: "Success!" });
+      res.status(200).send("Success!");
     } catch (err) {
-      res.json({ message: err });
+      res.send(err);
+    }
+  }
+});
+
+app.post("/api/login", async (req, res) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (user) {
+    if (await bcrypt.compare(req.body.password, user.password)) {
+      res.status(200).send("login successful");
+    } else {
+      res.status(401).send("Email or Password were invalid");
     }
   }
 });
 
 app.get("/", async (req, res) => {
-  console.log(await User.exists({ email: "Test" }));
   res.send(await User.find({ email: "test" }));
 });
 
