@@ -5,20 +5,37 @@ const app = express();
 const db = require("./db/connect");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Models
 const User = require("./models/User").User;
 const Habit = require("./models/Habit").Habit;
 
 // Middleware
+const checkToken = require("./middleware/checkToken").checkToken;
 app.use(cors());
 app.use(express.json());
 
 db.connect();
 
-app.get("/api/user", async (req, res) => {
-  const user = await User.find({ email: "test" });
-  res.json(user);
+app.get("/api/user", checkToken, async (req, res) => {
+  console.log(req.token);
+  //verify the JWT token generated for the user
+  jwt.verify(req.token, process.env.JWT_SECRET, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res
+        .status(403)
+        .send("Could not verify user, please login and try again.");
+    } else {
+      //If token is successfully verified, we can send the autorized data
+      res.json({
+        authorizedData,
+      });
+      console.log("SUCCESS: Connected to protected route");
+    }
+  });
 });
 
 app.post("/api/user", async (req, res) => {
@@ -43,15 +60,22 @@ app.post("/api/login", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
-      res.status(200).send("login successful");
+      jwt.sign(
+        { email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+        (err, token) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send("Server error, please login again.");
+          }
+          res.send(token);
+        }
+      );
     } else {
       res.status(401).send("Email or Password were invalid");
     }
   }
-});
-
-app.get("/", async (req, res) => {
-  res.send(await User.find({ email: "test" }));
 });
 
 app.listen(process.env.PORT, () => {

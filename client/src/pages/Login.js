@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -14,8 +16,8 @@ const Login = () => {
         password: password,
       })
       .then((response) => {
-        //Create JWT authorization and set cookie
-        console.log(response);
+        sessionStorage.token = response.data;
+        navigate("/");
       })
       .catch((error) => {
         try {
