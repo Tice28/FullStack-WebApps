@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   password: String,
   habits: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.Mixed,
       ref: "habit",
     },
   ],
@@ -19,4 +19,4 @@ const UserSchema = new mongoose.Schema({
 
 const Habit = mongoose.model("Habit", HabitSchema, "habit");
 const User = mongoose.model("User", UserSchema, "user");
-module.exports = { User };
+module.exports = { User, Habit };

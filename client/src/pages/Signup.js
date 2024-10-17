@@ -9,19 +9,21 @@ const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/user")
-      .then((response) => {
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.status === 403) {
+    if (sessionStorage.getItem("status") == null) {
+      axios
+        .get("http://localhost:8000/api/user")
+        .then((response) => {
           navigate("/login");
-        } else {
-          setErrors(error.response.data);
-        }
-      });
-  }, []);
+        })
+        .catch((error) => {
+          if (error.status !== 403) {
+            setErrors(error.response.data);
+          }
+        });
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

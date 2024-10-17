@@ -11,8 +11,8 @@ const Home = () => {
     axios
       .get("http://localhost:8000/api/user")
       .then((response) => {
-        //TODO: Change to take habit array and map
-        setHabits([response.data]);
+        sessionStorage.setItem("status", "loggedIn");
+        setHabits(response.data);
       })
       .catch((error) => {
         if (error.status === 403) {
@@ -21,7 +21,7 @@ const Home = () => {
           setErrors(error.response.data);
         }
       });
-  }, []);
+  }, [navigate]);
 
   return (
     <>
@@ -30,8 +30,8 @@ const Home = () => {
         <ul>{errors !== null ? <li>{errors}</li> : null}</ul>
       </div>
       <ul id="habits">
-        {habits.length === 0 ? (
-          habits.map((habit) => <li>{habit}</li>)
+        {habits.length !== 0 ? (
+          habits.map((habit) => <li key={habit.title}>{habit.title}</li>)
         ) : (
           <li>Habits list empty!</li>
         )}

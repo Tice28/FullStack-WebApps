@@ -10,6 +10,7 @@ const MongoStore = require("connect-mongo");
 
 // Models
 const User = require("./models/User").User;
+const Habit = require("./models/User").Habit;
 
 // Middleware
 app.use(
@@ -85,12 +86,64 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.post("/api/habit/create", async (req, res) => {
+  if (req.session.user !== undefined) {
+    try {
+      const user = await User.findOne({ _id: req.session.user });
+      const habit = new Habit({
+        title: req.body.title,
+        dateStarted: Date.now(),
+        datesCompleted: [],
+      });
+      console.log();
+      user.habits.push(habit);
+      console.log(user.habits);
+      await user.save();
+      res.sendStatus(200);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+app.post("/api/habit/update", async (req, res) => {
+  if (req.session.user !== undefined) {
+    try {
+      const user = await User.findOne({ _id: req.session.user });
+      //TODO: Update habit
+      console.log(user.habits);
+      res.sendStatus(200);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+app.post("/api/habit/delete", async (req, res) => {
+  if (req.session.user !== undefined) {
+    try {
+      const user = await User.findOne({ _id: req.session.user });
+      //TODO: Delete habit
+      console.log(user.habits);
+      res.sendStatus(200);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  } else {
+    res.sendStatus(403);
+  }
+});
+
 app.post("/api/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.log(err);
     } else {
-      res.send("Session is destroyed");
+      res.sendStatus(200);
     }
   });
 });

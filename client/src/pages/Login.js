@@ -10,19 +10,24 @@ const Login = () => {
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/user")
-      .then((response) => {
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.status === 403) {
-          navigate("/login");
-        } else {
-          setErrors(error.response.data);
-        }
-      });
-  }, []);
+    if (sessionStorage.getItem("status") == null) {
+      axios
+        .get("http://localhost:8000/api/user")
+        .then((response) => {
+          sessionStorage.setItem("status", "loggedIn");
+          navigate("/");
+        })
+        .catch((error) => {
+          if (error.status === 403) {
+            navigate("/login");
+          } else {
+            setErrors(error.response.data);
+          }
+        });
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,7 +37,7 @@ const Login = () => {
         password: password,
       })
       .then((response) => {
-        console.log(response.data);
+        sessionStorage.setItem("status", "loggedIn");
         navigate("/");
       })
       .catch((error) => {
