@@ -7,6 +7,8 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const mongoose = require("mongoose");
+const DateHelper = require("./middleware/Date");
 
 // Models
 const User = require("./models/User").User;
@@ -68,7 +70,6 @@ app.post("/api/user", async (req, res) => {
 
 app.post("/api/login", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
-  console.log(req.session);
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
       req.session.user = user._id;
@@ -92,12 +93,10 @@ app.post("/api/habit/create", async (req, res) => {
       const user = await User.findOne({ _id: req.session.user });
       const habit = new Habit({
         title: req.body.title,
-        dateStarted: Date.now(),
+        dateStarted: DateHelper.dateNow(),
         datesCompleted: [],
       });
-      console.log();
       user.habits.push(habit);
-      console.log(user.habits);
       await user.save();
       res.sendStatus(200);
     } catch (err) {
@@ -109,13 +108,33 @@ app.post("/api/habit/create", async (req, res) => {
 });
 
 app.post("/api/habit/update", async (req, res) => {
+  //TODO: Find a way to save the user's updated habit.
   if (req.session.user !== undefined) {
     try {
-      const user = await User.findOne({ _id: req.session.user });
-      //TODO: Update habit
-      console.log(user.habits);
+      User.findOne({
+        _id: new mongoose.Types.ObjectId(req.session.user),
+        habits: {
+          $elemMatch: {
+            _id: new mongoose.Types.ObjectId(req.body._id),
+          },
+        },
+      })
+        .then((user) => {
+          if (user) {
+            const habit = user.habits.find((h) => h._id.equals(req.body._id));
+            console.log("Found Habit:", habit);
+            habit.datesCompleted.push(DateHelper.dateNow());
+            console.log(habit.datesCompleted);
+          } else {
+            console.log("No user or habit found.");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       res.sendStatus(200);
     } catch (err) {
+      console.log(err);
       res.status(500).send(err);
     }
   } else {
@@ -128,7 +147,6 @@ app.post("/api/habit/delete", async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.session.user });
       //TODO: Delete habit
-      console.log(user.habits);
       res.sendStatus(200);
     } catch (err) {
       res.status(500).send(err);

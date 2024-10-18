@@ -23,6 +23,28 @@ const Home = () => {
       });
   }, [navigate]);
 
+  const submitFormComplete = (event, id) => {
+    console.log(id);
+    event.preventDefault();
+    axios
+      .post("http://localhost:8000/api/habit/update", { _id: id })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(event);
+        } else {
+          console.log("error");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const submitFormDelete = (event, id) => {
+    event.preventDefault();
+    console.log(id);
+  };
+
   return (
     <>
       <h1>Home</h1>
@@ -31,7 +53,19 @@ const Home = () => {
       </div>
       <ul id="habits">
         {habits.length !== 0 ? (
-          habits.map((habit) => <li key={habit.title}>{habit.title}</li>)
+          habits.map((habit) => (
+            <li key={habit._id}>
+              {habit.title}
+              <form onSubmit={(event) => submitFormComplete(event, habit._id)}>
+                <button type="submit" value={habit._id}>
+                  Complete
+                </button>
+              </form>
+              <form onSubmit={(event) => submitFormDelete(event, habit._id)}>
+                <button type="submit">Delete</button>
+              </form>
+            </li>
+          ))
         ) : (
           <li>Habits list empty!</li>
         )}
