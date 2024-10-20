@@ -23,11 +23,13 @@ const Home = () => {
       });
   }, [navigate]);
 
-  const submitFormComplete = (event, id) => {
-    console.log(id);
+  const submitFormComplete = (event, id, index) => {
     event.preventDefault();
     axios
-      .post("http://localhost:8000/api/habit/update", { _id: id })
+      .post("http://localhost:8000/api/habit/update", {
+        habit_id: id,
+        habit_index: index,
+      })
       .then((response) => {
         if (response.status === 200) {
           console.log(event);
@@ -53,13 +55,15 @@ const Home = () => {
       </div>
       <ul id="habits">
         {habits.length !== 0 ? (
-          habits.map((habit) => (
+          habits.map((habit, index) => (
             <li key={habit._id}>
               {habit.title}
-              <form onSubmit={(event) => submitFormComplete(event, habit._id)}>
-                <button type="submit" value={habit._id}>
-                  Complete
-                </button>
+              <form
+                onSubmit={(event) =>
+                  submitFormComplete(event, habit._id, index)
+                }
+              >
+                <button type="submit">Complete</button>
               </form>
               <form onSubmit={(event) => submitFormDelete(event, habit._id)}>
                 <button type="submit">Delete</button>

@@ -111,27 +111,15 @@ app.post("/api/habit/update", async (req, res) => {
   //TODO: Find a way to save the user's updated habit.
   if (req.session.user !== undefined) {
     try {
-      User.findOne({
-        _id: new mongoose.Types.ObjectId(req.session.user),
-        habits: {
-          $elemMatch: {
-            _id: new mongoose.Types.ObjectId(req.body._id),
+      await User.findOneAndUpdate(
+        { _id: req.session.user },
+        {
+          $push: {
+            [`habits.${req.body.habit_index}.datesCompleted`]:
+              DateHelper.dateNow(),
           },
-        },
-      })
-        .then((user) => {
-          if (user) {
-            const habit = user.habits.find((h) => h._id.equals(req.body._id));
-            console.log("Found Habit:", habit);
-            habit.datesCompleted.push(DateHelper.dateNow());
-            console.log(habit.datesCompleted);
-          } else {
-            console.log("No user or habit found.");
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+        }
+      );
       res.sendStatus(200);
     } catch (err) {
       console.log(err);
