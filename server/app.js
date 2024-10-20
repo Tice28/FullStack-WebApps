@@ -108,7 +108,6 @@ app.post("/api/habit/create", async (req, res) => {
 });
 
 app.post("/api/habit/update", async (req, res) => {
-  //TODO: Find a way to save the user's updated habit.
   if (req.session.user !== undefined) {
     try {
       await User.findOneAndUpdate(
@@ -133,10 +132,18 @@ app.post("/api/habit/update", async (req, res) => {
 app.post("/api/habit/delete", async (req, res) => {
   if (req.session.user !== undefined) {
     try {
-      const user = await User.findOne({ _id: req.session.user });
-      //TODO: Delete habit
+      console.log("Test");
+      await User.findOneAndUpdate(
+        { _id: req.session.user },
+        {
+          $pull: {
+            habits: { _id: new mongoose.Types.ObjectId(req.body.habit_id) },
+          },
+        }
+      );
       res.sendStatus(200);
     } catch (err) {
+      console.log(err);
       res.status(500).send(err);
     }
   } else {

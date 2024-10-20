@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { dateNow } from "../Date";
+import CompleteForm from "../components/CompleteForm";
 
 const Home = () => {
   const [errors, setErrors] = useState(null);
@@ -23,18 +25,14 @@ const Home = () => {
       });
   }, [navigate]);
 
-  const submitFormComplete = (event, id, index) => {
-    event.preventDefault();
+  const submitFormComplete = (event, index) => {
     axios
       .post("http://localhost:8000/api/habit/update", {
-        habit_id: id,
         habit_index: index,
       })
       .then((response) => {
-        if (response.status === 200) {
-          console.log(event);
-        } else {
-          console.log("error");
+        if (response.status !== 200) {
+          alert("An unexpected error has occured");
         }
       })
       .catch((error) => {
@@ -42,12 +40,23 @@ const Home = () => {
       });
   };
 
-  const submitFormDelete = (event, id) => {
-    event.preventDefault();
-    console.log(id);
+  const submitFormDelete = (event, _id) => {
+    axios
+      .post("http://localhost:8000/api/habit/delete", {
+        habit_id: _id,
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          alert("An unexpected error has occured");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
+    //TODO: Fix index passing
     <>
       <h1>Home</h1>
       <div id="errors">
@@ -58,13 +67,14 @@ const Home = () => {
           habits.map((habit, index) => (
             <li key={habit._id}>
               {habit.title}
-              <form
-                onSubmit={(event) =>
-                  submitFormComplete(event, habit._id, index)
-                }
-              >
-                <button type="submit">Complete</button>
-              </form>
+              {habit.datesCompleted !== undefined ? (
+                habit.datesCompleted.includes(dateNow()) === true ? null : (
+                  <CompleteForm
+                    func={submitFormComplete}
+                    index={index}
+                  ></CompleteForm>
+                )
+              ) : null}
               <form onSubmit={(event) => submitFormDelete(event, habit._id)}>
                 <button type="submit">Delete</button>
               </form>
