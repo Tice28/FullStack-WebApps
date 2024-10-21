@@ -1,6 +1,6 @@
-export default function CompleteForm({ func, index }) {
+export default function CompleteForm({ func, _id, status }) {
   return (
-    <form onSubmit={(event) => func(event, index)}>
+    <form onSubmit={(event) => func(event, _id, status)}>
       <button type="submit">Complete</button>
     </form>
   );

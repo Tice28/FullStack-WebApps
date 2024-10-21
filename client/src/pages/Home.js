@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { dateNow } from "../Date";
 import CompleteForm from "../components/CompleteForm";
+import NonCompleteForm from "../components/NonCompleteForm";
 
 const Home = () => {
   const [errors, setErrors] = useState(null);
@@ -25,10 +26,11 @@ const Home = () => {
       });
   }, [navigate]);
 
-  const submitFormComplete = (event, index) => {
+  const submitFormComplete = (event, _id, status) => {
     axios
       .post("http://localhost:8000/api/habit/update", {
-        habit_index: index,
+        habit_id: _id,
+        habit_status: status,
       })
       .then((response) => {
         if (response.status !== 200) {
@@ -68,10 +70,17 @@ const Home = () => {
             <li key={habit._id}>
               {habit.title}
               {habit.datesCompleted !== undefined ? (
-                habit.datesCompleted.includes(dateNow()) === true ? null : (
+                habit.datesCompleted.includes(dateNow()) === true ? (
+                  <NonCompleteForm
+                    func={submitFormComplete}
+                    _id={habit._id}
+                    status={"incomplete"}
+                  ></NonCompleteForm>
+                ) : (
                   <CompleteForm
                     func={submitFormComplete}
-                    index={index}
+                    _id={habit._id}
+                    status={"complete"}
                   ></CompleteForm>
                 )
               ) : null}

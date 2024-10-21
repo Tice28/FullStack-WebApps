@@ -110,16 +110,46 @@ app.post("/api/habit/create", async (req, res) => {
 app.post("/api/habit/update", async (req, res) => {
   if (req.session.user !== undefined) {
     try {
-      await User.findOneAndUpdate(
-        { _id: req.session.user },
-        {
-          $push: {
-            [`habits.${req.body.habit_index}.datesCompleted`]:
-              DateHelper.dateNow(),
-          },
+      if (req.body.habit_status == "complete") {
+        const user = await User.findById(req.session.user);
+
+        if (user) {
+          const habit = user.habits.find(
+            (h) => h._id.toString() === req.body.habit_id
+          );
+          if (habit) {
+            habit.datesCompleted.push(DateHelper.dateNow());
+            user.markModified("habits");
+            await user.save();
+            res.sendStatus(200);
+          } else {
+            res.status(404).send("Habit not found");
+          }
+        } else {
+          res.status(404).send("User not found");
         }
-      );
-      res.sendStatus(200);
+      }
+      if (req.body.habit_status === "incomplete") {
+        const user = await User.findById(req.session.user);
+
+        if (user) {
+          const habit = user.habits.find(
+            (h) => h._id.toString() === req.body.habit_id
+          );
+          if (habit) {
+            habit.datesCompleted = habit.datesCompleted.filter(
+              (date) => date !== DateHelper.dateNow()
+            );
+            user.markModified("habits");
+            await user.save();
+            res.sendStatus(200);
+          } else {
+            res.status(404).send("Habit not found");
+          }
+        } else {
+          res.status(404).send("User not found");
+        }
+      }
     } catch (err) {
       console.log(err);
       res.status(500).send(err);
