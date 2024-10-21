@@ -162,7 +162,7 @@ app.post("/api/habit/update", async (req, res) => {
 app.post("/api/habit/delete", async (req, res) => {
   if (req.session.user !== undefined) {
     try {
-      console.log("Test");
+      console.log(req.body.habit_id);
       await User.findOneAndUpdate(
         { _id: req.session.user },
         {
