@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Layout = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionStorage.getItem("status") == null) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const onSubmit = (event) => {
     event.preventDefault();

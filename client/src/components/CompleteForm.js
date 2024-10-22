@@ -8,7 +8,6 @@ export default function CompleteForm({ _id, handler }) {
         habit_status: "complete",
       })
       .then((response) => {
-        console.log(response);
         if (response.status !== 200) {
           alert("An unexpected error has occured");
         }
