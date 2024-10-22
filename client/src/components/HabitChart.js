@@ -7,20 +7,17 @@ export default function HabitChart({ dates }) {
       moment().subtract(i, "days").format("YYYY/MM/D") ===
       dates[dates.length - 1]
     ) {
-      days.unshift(
-        <div key={i} className="day-incomplete">
-          True
-        </div>
-      );
+      days.unshift(<div key={i} className="day-complete"></div>);
       dates.splice(dates.length - 1, 1);
     } else {
-      days.unshift(
-        <div key={i} className="day-complete">
-          False
-        </div>
-      );
+      days.unshift(<div key={i} className="day-incomplete"></div>);
     }
   }
 
-  return <div className="habit-chart">{days}</div>;
+  return (
+    <div>
+      <h3>Habit Completion (Past 365 days)</h3>
+      <div className="habit-chart">{days}</div>
+    </div>
+  );
 }
