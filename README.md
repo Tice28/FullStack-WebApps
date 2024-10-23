@@ -22,11 +22,11 @@
 </ul>
 
 <h2>How to use this project</h2>
-<p>To use this project yourself, you will need a MongoDB account, since I am not actively hosting this project. Then you will need to do the following steps.</p>
+<p>To use this project yourself, you will need a MongoDB account (and set up a free database with it), since I am not actively hosting this project. Then you will need to do the following steps.</p>
 
 <ol>
     <li>Clone the repository</li>
-    <li>Enter the environment variables needed (see [Here](#.env))</li>
+    <li>Enter the environment variables needed (see .env section)</li>
     <li>Change to the server directory and run node app.js or node --watch app.js if you are making changes.</li>
     <li>Change to the client directory and run npm start, and it will run the built in script to start the client.</li>
     <li>Finally, you should be able to use the application!</li>
