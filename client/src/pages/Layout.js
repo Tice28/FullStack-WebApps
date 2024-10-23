@@ -28,7 +28,7 @@ const Layout = () => {
       <nav>
         <ul>
           {sessionStorage.getItem("status") == null ? (
-            <li>
+            <li className="nav-item">
               <Link to="/login">Login</Link>
             </li>
           ) : null}

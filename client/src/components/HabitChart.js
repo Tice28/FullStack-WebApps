@@ -15,8 +15,8 @@ export default function HabitChart({ dates }) {
   }
 
   return (
-    <div>
-      <h3>Habit Completion (Past 365 days)</h3>
+    <div className="habit-chart-div">
+      <h4>Habit Completion (Past 365 days)</h4>
       <div className="habit-chart">{days}</div>
     </div>
   );

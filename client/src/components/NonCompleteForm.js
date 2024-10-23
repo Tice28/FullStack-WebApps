@@ -11,16 +11,17 @@ export default function NonCompleteForm({ _id, handler }) {
         if (response.status !== 200) {
           alert("An unexpected error has occured");
         }
+        handler();
       })
       .catch((error) => {
         console.log(error);
       });
-
-    handler();
   };
   return (
     <form onSubmit={(event) => submitFormIncomplete(event, _id)}>
-      <button type="submit">Undo Completion</button>
+      <button type="submit" className="btn btn-primary">
+        Undo Completion
+      </button>
     </form>
   );
 }

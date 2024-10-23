@@ -1,7 +1,21 @@
+:root {
+  --amethyst: #ab6cefff;
+  --pistachio: #afdf7cff;
+  --bittersweet: #f77364ff;
+  --electric-blue: #73e0e7ff;
+  --pale-purple: #eadafbff;
+  --honeydew: #ebf7deff;
+  --misty-rose: #fddcd8ff;
+  --light-cyan: #dcf7f9ff;
+  --davys-gray: #474647ff;
+  --dim-gray: #686468;
+}
+
 html,
 body {
   margin-left: 10%;
   margin-right: 10%;
+  background-color: var(--davys-gray);
 }
 
 nav,
@@ -17,25 +31,115 @@ nav > form {
 nav > ul {
   list-style: none;
   gap: 5px;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+
+  border-bottom: 1px solid grey;
+}
+
+a:hover {
+  text-decoration: none;
+  color: black;
+  background-color: lightgray;
+  border-bottom: 1px solid grey;
 }
 
 .habit-chart {
   margin: 10px 10px 10px 0;
   display: grid;
-  grid-template-columns: repeat(73, 5px);
+  grid-template-columns: repeat(auto-fill, 10px);
 }
 
 .day-complete,
 .day-incomplete {
-  width: 5px;
-  height: 5px;
+  width: 10px;
+  height: 10px;
   border: 1px solid black;
 }
 
-.day-complete {
-  background-color: blue;
+.habit {
+  background-color: var(--dim-gray);
+  border: none;
 }
 
-.day-incomplete {
-  background-color: red;
+.habit-list > li:nth-child(4n-3) {
+  border: 1px solid var(--amethyst);
+}
+.habit-list > li:nth-child(4n-2) {
+  border: 1px solid var(--bittersweet);
+}
+.habit-list > li:nth-child(4n-1) {
+  border: 1px solid var(--pistachio);
+}
+.habit-list > li:nth-child(4n) {
+  border: 1px solid var(--electric-blue);
+}
+
+.habit-list
+  > li:nth-child(4n-3)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-incomplete {
+  background-color: var(--pale-purple);
+}
+
+.habit-list
+  > li:nth-child(4n-3)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-complete {
+  background-color: var(--amethyst);
+}
+
+.habit-list
+  > li:nth-child(4n-2)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-incomplete {
+  background-color: var(--misty-rose);
+}
+
+.habit-list
+  > li:nth-child(4n-2)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-complete {
+  background-color: var(--bittersweet);
+}
+
+.habit-list
+  > li:nth-child(4n-1)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-incomplete {
+  background-color: var(--honeydew);
+}
+
+.habit-list
+  > li:nth-child(4n-1)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-complete {
+  background-color: var(--pistachio);
+}
+
+.habit-list
+  > li:nth-child(4n)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-incomplete {
+  background-color: var(--light-cyan);
+}
+
+.habit-list
+  > li:nth-child(4n)
+  > .habit-chart-div
+  > .habit-chart
+  > .day-complete {
+  background-color: var(--electric-blue);
 }

@@ -6,6 +6,7 @@ import NoPage from "./pages/NoPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import HabitForm from "./pages/HabitForm";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
 export default function App() {

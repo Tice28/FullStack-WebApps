@@ -11,17 +11,18 @@ export default function CompleteForm({ _id, handler }) {
         if (response.status !== 200) {
           alert("An unexpected error has occured");
         }
+        handler();
       })
       .catch((error) => {
         console.log(error);
       });
-
-    handler();
   };
 
   return (
     <form onSubmit={(event) => submitFormComplete(event, _id)}>
-      <button type="submit">Complete</button>
+      <button type="submit" className="btn btn-primary">
+        Complete
+      </button>
     </form>
   );
 }

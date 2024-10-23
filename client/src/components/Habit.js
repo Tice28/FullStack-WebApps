@@ -10,7 +10,7 @@ export default function Habit({ habit }) {
     habit.datesCompleted.includes(dateNow())
   );
 
-  function completeHanlder() {
+  function completeHandler() {
     if (habitStatus) {
       setHabitStatus(false);
     } else {
@@ -18,18 +18,21 @@ export default function Habit({ habit }) {
     }
   }
   return (
-    <li key={habit._id}>
-      {habit.title}
+    <li className="list-group-item habit">
+      <h3>{habit.title}</h3>
       {habitStatus === true ? (
         <NonCompleteForm
           _id={habit._id}
-          handler={completeHanlder}
+          handler={completeHandler}
         ></NonCompleteForm>
       ) : (
-        <CompleteForm _id={habit._id} handler={completeHanlder}></CompleteForm>
+        <CompleteForm _id={habit._id} handler={completeHandler}></CompleteForm>
       )}
       <DeleteForm _id={habit._id}></DeleteForm>
-      <HabitChart dates={habit.datesCompleted}></HabitChart>
+      <HabitChart
+        dates={habit.datesCompleted}
+        className="habit-chart-container"
+      ></HabitChart>
     </li>
   );
 }

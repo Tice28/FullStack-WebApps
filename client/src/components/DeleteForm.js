@@ -19,7 +19,9 @@ export default function DeleteForm({ _id }) {
 
   return (
     <form onSubmit={(event) => submitFormDelete(event, _id)}>
-      <button type="submit">Delete Habit</button>
+      <button type="submit" className="btn btn-danger">
+        Delete Habit
+      </button>
     </form>
   );
 }
