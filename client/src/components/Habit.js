@@ -17,18 +17,25 @@ export default function Habit({ habit }) {
       setHabitStatus(true);
     }
   }
+
   return (
     <li className="list-group-item habit">
       <h3>{habit.title}</h3>
-      {habitStatus === true ? (
-        <NonCompleteForm
-          _id={habit._id}
-          handler={completeHandler}
-        ></NonCompleteForm>
-      ) : (
-        <CompleteForm _id={habit._id} handler={completeHandler}></CompleteForm>
-      )}
-      <DeleteForm _id={habit._id}></DeleteForm>
+      <div className="habit-options">
+        {habitStatus === true ? (
+          <NonCompleteForm
+            _id={habit._id}
+            handler={completeHandler}
+          ></NonCompleteForm>
+        ) : (
+          <CompleteForm
+            _id={habit._id}
+            handler={completeHandler}
+          ></CompleteForm>
+        )}
+        <DeleteForm _id={habit._id}></DeleteForm>
+      </div>
+
       <HabitChart
         dates={habit.datesCompleted}
         className="habit-chart-container"

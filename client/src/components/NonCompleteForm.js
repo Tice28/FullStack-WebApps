@@ -20,7 +20,7 @@ export default function NonCompleteForm({ _id, handler }) {
   return (
     <form onSubmit={(event) => submitFormIncomplete(event, _id)}>
       <button type="submit" className="btn btn-primary">
-        Undo Completion
+        <img src="/box_check_icon.svg" alt="Undo Complete" />
       </button>
     </form>
   );

@@ -21,7 +21,7 @@ export default function CompleteForm({ _id, handler }) {
   return (
     <form onSubmit={(event) => submitFormComplete(event, _id)}>
       <button type="submit" className="btn btn-primary">
-        Complete
+        <img src="/blank_check_box_icon.svg" alt="Complete" />
       </button>
     </form>
   );

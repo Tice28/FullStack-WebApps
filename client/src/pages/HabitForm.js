@@ -44,7 +44,7 @@ const HabitForm = () => {
   return (
     <>
       <h1>HabitForm</h1>
-      <form onSubmit={submitForm}>
+      <form onSubmit={submitForm} className="account-form">
         <label htmlFor="title" className="form-label">
           Habit Title
         </label>
@@ -54,7 +54,7 @@ const HabitForm = () => {
           className="form-control"
           onChange={(event) => setTitle(event.target.value)}
         ></input>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-secondary">
           Create
         </button>
       </form>

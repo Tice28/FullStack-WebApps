@@ -9,19 +9,8 @@ const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sessionStorage.getItem("status") == null) {
-      axios
-        .get("http://localhost:8000/api/user")
-        .then((response) => {
-          navigate("/login");
-        })
-        .catch((error) => {
-          if (error.status !== 403) {
-            setErrors(error.response.data);
-          }
-        });
-    } else {
-      navigate("/login");
+    if (sessionStorage.getItem("status") !== null) {
+      navigate("/");
     }
   }, [navigate]);
 
@@ -54,20 +43,28 @@ const Signup = () => {
       <div id="errors">
         <ul>{errors !== null ? <li>{errors}</li> : null}</ul>
       </div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          onChange={(event) => setEmail(event.target.value)}
-        ></input>
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          onChange={(event) => setPassword(event.target.value)}
-        ></input>
-        <button type="submit">Signup</button>
+      <form className="account-form" onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            onChange={(event) => setEmail(event.target.value)}
+          ></input>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="form-control"
+            onChange={(event) => setPassword(event.target.value)}
+          ></input>
+        </div>
+        <button className="btn btn-secondary" type="submit">
+          Signup
+        </button>
       </form>
     </>
   );
