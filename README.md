@@ -4,3 +4,5 @@ This is a repository to catalog fullstack apps that I build using different tech
 # Current Projects:
 
 # Habit Tracker - MERN Stack <a href="https://github.com/Tice28/FullStack-WebApps/tree/habittracker">Link</a>
+
+# Finance Tracker - Django + Vue + Postgres <a href="https://github.com/Tice28/FullStack-WebApps/tree/financetracker">Link</a>
