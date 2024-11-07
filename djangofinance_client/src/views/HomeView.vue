@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import PortfolioHome from "@/components/PortfolioHome.vue";
+import LoginForm from "@/components/LoginForm.vue";
+import RegisterForm from "@/components/RegisterForm.vue";
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <PortfolioHome></PortfolioHome>
 </template>
