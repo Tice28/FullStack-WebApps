@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user_api',
     'portfolio',
-    'corsheaders'
+
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,7 @@ MIDDLEWARE = [
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5137']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 
 ROOT_URLCONF = 'djangofinance_server.urls'
 

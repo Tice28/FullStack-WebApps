@@ -6,6 +6,5 @@ import { RouterLink, RouterView } from "vue-router";
   <header>
     <h1>Django Finance</h1>
   </header>
-
   <RouterView />
 </template>
